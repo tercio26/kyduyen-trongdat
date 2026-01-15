@@ -154,7 +154,18 @@ createApp({
                         price: '150k/ngày'
                     }
                 ]
-            }
+            },
+
+            countdownExpanded: false, // thêm dòng này
+            targetDate: new Date('2026-02-19T15:00:00'),
+            countdown: {
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                isPast: false
+            },
+            countdownInterval: null
         };
     },
     computed: {
@@ -163,9 +174,49 @@ createApp({
         },
         progressWidth() {
             return (this.currentDay / 3) * 100;
+        },
+        countdownText() {
+            if (this.countdown.isPast) {
+                return '☕💕';
+            }
+            return `${this.countdown.days} ngày ${this.countdown.hours} giờ ${this.countdown.minutes} phút ${this.countdown.seconds} giây`;
+        }
+    },
+
+    mounted() {
+        this.startCountdown();
+    },
+    beforeUnmount() {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
         }
     },
     methods: {
+        startCountdown() {
+            this.updateCountdown();
+            this.countdownInterval = setInterval(() => {
+                this.updateCountdown();
+            }, 1000);
+        },
+
+        updateCountdown() {
+            const now = new Date().getTime();
+            const target = this.targetDate.getTime();
+            const distance = target - now;
+
+            if (distance < 0) {
+                this.countdown.isPast = true;
+                if (this.countdownInterval) {
+                    clearInterval(this.countdownInterval);
+                }
+                return;
+            }
+
+            this.countdown.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            this.countdown.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            this.countdown.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            this.countdown.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        },
         getTabIcon(tab) {
             const icons = {
                 bus: 'directions_bus',

@@ -280,6 +280,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- Thêm vào cuối, trước </div> của game-container -->
+        <div class="floating-countdown-mini" :class="{ expanded: countdownExpanded, past: countdown.isPast }">
+            <div class="countdown-mini-header" @click="countdownExpanded = !countdownExpanded">
+                <span class="material-icons icon-sm">{{ countdown.isPast ? 'celebration' : 'local_cafe' }}</span>
+                <span class="countdown-mini-label">{{ countdown.isPast ? 'Go!' : 'To Meet' }}</span>
+            </div>
+
+            <div class="countdown-mini-content" v-show="countdownExpanded">
+                <div v-if="!countdown.isPast" class="countdown-mini-time">
+                    <div class="mini-digit-group">
+                        <div class="mini-digit">{{ countdown.days }}</div>
+                        <div class="mini-label">ngày</div>
+                    </div>
+                    <div class="mini-sep">:</div>
+                    <div class="mini-digit-group">
+                        <div class="mini-digit">{{ String(countdown.hours).padStart(2, '0') }}</div>
+                        <div class="mini-label">giờ</div>
+                    </div>
+                    <div class="mini-sep">:</div>
+                    <div class="mini-digit-group">
+                        <div class="mini-digit">{{ String(countdown.minutes).padStart(2, '0') }}</div>
+                        <div class="mini-label">phút</div>
+                    </div>
+                </div>
+                <div v-else class="countdown-mini-message">
+                    🎉 ☕
+                </div>
+                <div class="countdown-mini-date">19/02/2026 • 15:00</div>
+            </div>
+        </div>
+
     </div>
 </div>
 
